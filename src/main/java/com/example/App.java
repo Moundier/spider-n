@@ -21,11 +21,11 @@ public class App {
 		String url = String.format(URL_TEMPLATE, numb);
 		Document doc = request(url);
 
-		if (doc == null) {
-			Dog.fail("Unable to retrieve document for URL: " + url);
-		} else {
-			Dog.done(doc.title());
-		}
+		// if (doc == null) {
+		// 	Dog.fail("Unable to retrieve document for URL: " + url);
+		// } else {
+		// 	Dog.done(doc.title());
+		// }
 
 		Dog.info("" + numb);
 
@@ -38,8 +38,8 @@ public class App {
 		try {
 			Connection connection = Jsoup.connect(url);
 			Connection.Response response = connection.execute();
-			Dog.done("Visiting URL");
 			Document document = response.parse();
+			Dog.done("Visiting URL: " + url + ", Title: " + document.title());
 			return document;
 		} 
 		catch (HttpStatusException e) {
