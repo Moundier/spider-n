@@ -12,6 +12,7 @@ public class App {
 	private static final String URL_TEMPLATE = "https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=%d";
 
 	public static void main(String... args) {
+		Dog.warn("Spider: Starting to crawl");
 		crawlDescending(74584); // 74584 100000 
 	}
 
@@ -22,10 +23,8 @@ public class App {
 
 		if (doc == null) {
 			Dog.fail("Unable to retrieve document for URL: " + url);
-		}
-
-		if (doc != null) {
-			Dog.info("Title: " + doc.title());
+		} else {
+			Dog.done(doc.title());
 		}
 
 		Dog.info("" + numb);
@@ -39,7 +38,7 @@ public class App {
 		try {
 			Connection connection = Jsoup.connect(url);
 			Connection.Response response = connection.execute();
-			Dog.done("Visiting URL -");
+			Dog.done("Visiting URL");
 			Document document = response.parse();
 			return document;
 		} 
