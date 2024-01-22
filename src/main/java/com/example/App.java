@@ -24,8 +24,6 @@ public class App {
 			Dog.fail("Unable to retrieve document for URL: " + url);
 		}
 
-		Dog.warn("Visiting URL - " + url);
-
 		if (doc != null) {
 			Dog.info("Title: " + doc.title());
 		}
