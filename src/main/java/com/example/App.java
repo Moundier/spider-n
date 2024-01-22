@@ -12,24 +12,25 @@ public class App {
 	private static final String URL_TEMPLATE = "https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=%d";
 
 	public static void main(String... args) {
-		crawlDescending(100000);
+		crawlDescending(74584); // 74584 100000 
 	}
 
 	private static void crawlDescending(int numb) {
+		System.out.println("----------------------");
 		String url = String.format(URL_TEMPLATE, numb);
 		Document doc = request(url);
 
 		if (doc == null) {
-			System.out.println("FAIL: Unable to retrieve document for URL: " + url);
+			Dog.fail("Unable to retrieve document for URL: " + url);
 		}
 
-		System.out.println("INFO: Visiting URL - " + url);
+		Dog.warn("Visiting URL - " + url);
 
 		if (doc != null) {
-			System.out.println("Title: " + doc.title());
+			Dog.info("Title: " + doc.title());
 		}
 
-		System.out.println(numb);
+		Dog.info("" + numb);
 
 		for (int i = 0; numb >= i; numb--) {
 			crawlDescending(--numb);
@@ -40,12 +41,13 @@ public class App {
 		try {
 			Connection connection = Jsoup.connect(url);
 			Connection.Response response = connection.execute();
+			Dog.done("Visiting URL -");
 			Document document = response.parse();
 			return document;
 		} catch (HttpStatusException e) {
-			String errorMessage = (e.getStatusCode() == 500) ? "(url)" : "";
+			String errorMessage = (e.getStatusCode() == 500) ? "Visiting URL -" : "";
 			String urlNumb = e.getUrl().substring(40);
-			System.out.println("FAIL: " + errorMessage + " " + urlNumb);
+			Dog.fail(errorMessage + " " + urlNumb);
 			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
