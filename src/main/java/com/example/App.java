@@ -42,12 +42,14 @@ public class App {
 			Dog.done("Visiting URL -");
 			Document document = response.parse();
 			return document;
-		} catch (HttpStatusException e) {
+		} 
+		catch (HttpStatusException e) {
 			String errorMessage = (e.getStatusCode() == 500) ? "Visiting URL -" : "";
 			String urlNumb = e.getUrl().substring(40);
 			Dog.fail(errorMessage + " " + urlNumb);
 			return null;
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
