@@ -30,7 +30,7 @@ public class App {
 		Dog.info("" + numb);
 
 		for (int i = 0; numb >= i; --numb) {
-			crawlDescending(--numb);
+			crawlDescending(--numb); // A for loop that goes down
 		}
 	}
 
