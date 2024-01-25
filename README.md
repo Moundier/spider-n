@@ -43,3 +43,8 @@ def SELENIUM_from_list_find_professors_with_selenium()
 def SELENIUM_from_lattes_hyperlink_find_professors()
 
 ```
+
+
+The stanfordNLP requires a model to be downloaded
+here it is
+https://stanfordnlp.github.io/stanfordnlp/models.html

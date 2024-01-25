@@ -14,23 +14,25 @@ public class Note {
   private static final PrintStream io = System.out; // You can customize the output stream
 
   public static void info(String message) {
-    output(ANSI_BLUE, "INFO", message);
+    io(ANSI_BLUE, "INFO", message);
   }
 
   public static void fail(String message) {
-    output(ANSI_RED, "FAIL", message);
+    io(ANSI_RED, "FAIL", message);
   }
 
   public static void warn(String message) {
-    output(ANSI_YELLOW, "WARN", message);
+    io(ANSI_YELLOW, "WARN", message);
   }
 
   public static void done(String message) {
-    output(ANSI_GREEN, "DONE", message);
+    io(ANSI_GREEN, "DONE", message);
   }
 
-  private static void output(String color, String prefix, String message) {
+  private static void io(String color, String prefix, String message) {
     io.println(color + prefix + " " + message + ANSI_RESET);
   }
+
+  
 
 }
