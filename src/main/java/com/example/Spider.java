@@ -50,7 +50,7 @@ public class Spider {
 		// CollectProjectParticipants(els, doc);
 		// CollectProjectOrgs(els, doc);
 
-		for (int i = 0; numb >= i;) {
+		while (true) {
 			crawlDescendingIds(--numb);
 		}
 	}
