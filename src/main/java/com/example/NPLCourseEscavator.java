@@ -35,6 +35,8 @@ public class NPLCourseEscavator {
     }
   }
 
+  // NOTE: propTokens are proper nouns (names of places, courses and people)
+
   public List<String> ruleForPlaces(String textNLP) {
     return List.of();
   }
