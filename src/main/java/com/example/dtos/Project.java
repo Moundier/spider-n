@@ -21,4 +21,5 @@ public class Project {
     private String projectName;
     private LocalDate dateStart;
     private LocalDate dateFinal;
+    private Integer projectNumber; // TODOS: UniqueIdentifier
 }

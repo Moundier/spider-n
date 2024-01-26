@@ -22,9 +22,9 @@ public class ProjectAssociate {
 
     // TODOs: LOM LearningObjectMetadata
 
-    // aqui temos o associado ao projeto
-    // podendo ser professor ou aluno
-    // podendo ter uma serie de papeis 
+    // NOTES: Associate is linked with Project
+    // NOTES: Associate can be Professor or Student
+    // NOTES: Either might play any role in the Application
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

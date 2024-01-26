@@ -18,7 +18,7 @@ public class Associate {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long associadoId;
   private String nome;
-  private String matricula; // SERA um identificador
+  private String matricula; // UniqueIdentifier
   private AssociateRole associateRole;
   private String email;
 
