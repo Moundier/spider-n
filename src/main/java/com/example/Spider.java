@@ -55,10 +55,10 @@ public class Spider {
 		}
 	}
 
+
 	private static void CollectProjectBasicData(Elements elements, Document doc) {
 		for (Element el : elements) {
-			System.out
-					.println(el.child(doc.getElementsByClass("span12").size() % 2).text().toUpperCase()/* .text() */ );
+			System.out.println(el.child(doc.getElementsByClass("span12").size() % 2).text().toUpperCase()/* .text() */ );
 			System.out.println(el.child(doc.getElementsByClass("span12").size() % 2 + 2).text()/* .text() */ + "\n");
 		}
 	}

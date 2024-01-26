@@ -27,4 +27,5 @@ public class Associate {
   // Entao colleta os associados
   // Entao colleta o projeto
   // Vincula projeto com associados
+  
 }
