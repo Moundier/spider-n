@@ -12,6 +12,7 @@ public class Professor {
   private String pictureURL;
   private ArrayList<Keyword> keywords;
 
+
   // 
   // professor possui lista de disciplina
   // professor possui lista de curso
@@ -22,26 +23,20 @@ public class Professor {
   // TODOs: examplo, coordenado, autor, professor, 
 
 
-  public enum AcademicAffiliation {
-    DOCENTE,
-    DISCENTE,
-  }
 
-  public enum Papel {
-    AUTOR,
-    PROFESSOR,
-    MESTRE,
-    DOUTOR,
-    ALUNO,
-    PARTICIPANTE,
-    COAUTOR,
-    COORDENADOR,
-    PESQUISADOR,
+  // DOS dados basicos, pegar classificacao principal
+  // dos participantes, as funcoes
+
+  public enum ProjectCategory {
+    PESQUISA,
+    EXTENSAO,
+    MESTRADO,
+    DOUTORADO
   }
 
 }
 
-// 
+// Nesse projeto x o professor y desempenha papel z
 
 // coleta entidade
 // se entidade nao existir, salva
