@@ -1,19 +1,36 @@
 package com.example.dtos;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name = "associate")
 public class Associate {
 
-  /**
-  ** Represents the academic role of an associate.
-  **/
-  public enum AcademicRole {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long associadoId;
+  private String nome;
+  private String matricula; // SERA um identificador
+  private AssociateRole associateRole;
+  private String email;
+
+  @Enumerated(EnumType.STRING)
+  private AcademicRole academicRole;
+
+  private enum AcademicRole {
     DOCENTE, // Faculty
     DISCENTE, // Student
     ADMINISTRATIVO // Administrative staff
   }
 
-  /**
-   * Represents the specific role of an associate within the campus context.
-   */
   public enum AssociateRole {
     AUTOR, // Author
     PARTICIPANTE, // Participant
@@ -23,9 +40,4 @@ public class Associate {
     PALESTRANTE, // Speaker
     ORGANIZADOR // Event organizer
   }
-
-  // Entao colleta os associados
-  // Entao colleta o projeto
-  // Vincula projeto com associados
-  
 }
