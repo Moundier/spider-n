@@ -45,9 +45,9 @@ public class Spider {
       }
 
       Boolean isProjectConfidential = doc
-          .getElementsByClass("label pill error")
-          .text()
-          .equals("Este é um projeto confidencial");
+        .getElementsByClass("label pill error")
+        .text()
+        .equals("Este é um projeto confidencial");
 
       if (isProjectConfidential) {
         Note.fail("Confidential Project: " + url);
