@@ -27,48 +27,41 @@ public class Spider {
     Runtime.getRuntime().addShutdownHook(new Thread(runnable));
 
     Note.warn("Spider: Starting to crawl");
-    Spider.crawlDescendingIds(74584); // 74584 100000
+    Spider.crawl(74584); // 74584 100000
   }
 
-  private static void crawlDescendingIds(int numb) {
-    if (numb <= 0) {
-      System.out.println("Crawling completed.");
-      return;
+  private static void crawl(int startId) {
+    
+    for (int numb = startId; numb > 0; numb--) {
+      System.out.println("-------------------------");
+      String url = String.format(URL_TEMPLATE, numb);
+      Document doc = request(url);
+
+      Note.info("Found PageId: " + numb);
+
+      if (doc == null) {
+        Note.fail("Failed to retrieve document for URL: " + url);
+        continue;
+      }
+
+      Boolean isProjectConfidential = doc
+          .getElementsByClass("label pill error")
+          .text()
+          .equals("Este é um projeto confidencial");
+
+      if (isProjectConfidential) {
+        Note.fail("Confidential Project: " + url);
+        continue;
+      }
+
+      Note.done("Visiting URL: " + url + ", Title: " + doc.title());
+
+      Elements title = doc.getElementsByClass("panel-title");
+      Set<String> titleSet = Spider.titles(title, doc);
+      System.out.println(titleSet);
     }
 
-    System.out.println("-------------------------");
-    String url = String.format(URL_TEMPLATE, numb);
-    Document doc = request(url);
-
-    Note.info("Found PageId: " + numb);
-
-    if (doc == null) {
-      Note.fail("Failed to retrieve document for URL: " + url);
-      crawlDescendingIds(--numb);
-      return;
-    }
-
-    Boolean isProjectConfidential = doc
-        .getElementsByClass("label pill error")
-        .text()
-        .equals("Este é um projeto confidencial");
-
-    if (isProjectConfidential) {
-      Note.fail("Confidential Project: " + url);
-      crawlDescendingIds(--numb);
-      return;
-    }
-
-    Note.done("Visiting URL: " + url + ", Title: " + doc.title());
-
-    Elements title = doc.getElementsByClass("panel-title");
-    Set<String> titleSet = Spider.titles(title, doc);
-    System.out.println(titleSet);
-
-    if (numb != 0) {
-      crawlDescendingIds(--numb);
-      System.out.println("Crawling completed.");
-    }
+    System.out.println("Crawling completed.");
   }
 
   private static Set<String> titles(Elements elements, Document document) {
