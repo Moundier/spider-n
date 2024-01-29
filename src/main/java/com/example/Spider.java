@@ -65,11 +65,10 @@ public class Spider {
     Set<String> titleSet = Spider.titles(title, doc);
     System.out.println(titleSet);
 
-    if (numb <= 0) {
+    if (numb != 0) {
+      crawlDescendingIds(--numb);
       System.out.println("Crawling completed.");
-      return;
     }
-    crawlDescendingIds(--numb);
   }
 
   private static Set<String> titles(Elements elements, Document document) {
