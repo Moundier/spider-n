@@ -1,6 +1,7 @@
 package com.example;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,19 +20,22 @@ public class Spider {
 
   private static final String URL_TEMPLATE = "https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=%d";
 
-  public static void main(String... args) {
-    Runnable runnable = () -> {
-      System.out.println("\nProgram finished... " + TimeFormatted.now());
-    };
+  private static PrintStream io = System.out;
 
+  private static void onClose(Runnable runnable) {
     Runtime.getRuntime().addShutdownHook(new Thread(runnable));
+  }
+
+  public static void main(String... args) {
+
+    onClose(() -> io.println("\nProgram finished... " + TimeFormatted.now()));
 
     Note.warn("Spider: Starting to crawl");
     Spider.crawl(74584); // 74584 100000
   }
 
   private static void crawl(int startId) {
-    
+
     for (int numb = startId; numb > 0; numb--) {
       System.out.println("-------------------------");
       String url = String.format(URL_TEMPLATE, numb);
@@ -44,12 +48,12 @@ public class Spider {
         continue;
       }
 
-      Boolean isProjectConfidential = doc
+      Boolean confidential = doc
         .getElementsByClass("label pill error")
         .text()
         .equals("Este é um projeto confidencial");
 
-      if (isProjectConfidential) {
+      if (confidential) {
         Note.fail("Confidential Project: " + url);
         continue;
       }
