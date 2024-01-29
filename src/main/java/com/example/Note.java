@@ -33,6 +33,4 @@ public class Note {
     io.println(color + prefix + " " + message + ANSI_RESET);
   }
 
-  
-
 }
