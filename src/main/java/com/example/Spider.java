@@ -11,6 +11,11 @@ import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import com.example.models.Members;
 import com.example.models.Keyword;
@@ -59,9 +64,10 @@ public class Spider {
     return false;
   }
 
-
+  // TODOs: important for investivation of potential changes
   static Set<String> inspectStatus = new HashSet<>();
   static Set<String> inspectClassification = new HashSet<>();
+  static Set<String> inspectMemeberRole = new HashSet<>();
 
   private static void crawl(int startId) {
 
@@ -78,7 +84,7 @@ public class Spider {
       }
 
       if (foundForbidden(doc, url)) {
-        continue; // TODOs: ignores and continue
+        continue; // TODOs: ignores forbidden projects and continue
       }
 
       Todo.done("Visiting URL: " + url + ", Title: " + doc.title());
@@ -107,6 +113,12 @@ public class Spider {
         getStatus(doc.select("div.span6 > span").get(14).text()),  // TODOs: concluded
         null   // TODOs: keywords
       );
+
+      
+      // NOTE: Be careful
+      doc = Jsoup.parse(driver(url));
+
+      Set<Members> members = getMembers(doc.select("tr td"));
 
       System.out.println(project);
 
@@ -152,18 +164,29 @@ public class Spider {
     }
   }
 
-  private static Set<Members> getMembers() {
+  private static Set<Members> getMembers(Elements elements) {
 
     Set<Members> associates = new HashSet<Members>();
 
-    for (Members associate : associates) {
+    for (Element el : elements) {
       
+      // NOTE: PERSONAL
+      // NOTE: vinculo
+      // NOTE: vinculoStatus
+      // NOTE: email
+
+      // NOTE: GENERAL
+      // NOTE: get image
+      // NOTE: matricula
+      // NOTE: nome
+      // NOTE: funcao
+      // NOTE: carga horaria
+      // NOTE: periodo
+      System.out.println(el.text());
     }
 
     return associates;
   }
-
-  // }
 
   // FAIL: Unique Id 74441 Unexpectedly failed
   // FAIL: Stack Overflow at 72714 (ERROR)
@@ -175,7 +198,7 @@ public class Spider {
     Classification classification,
     String summary,
     String objectives,
-    String justification,
+    String defense,
     String results,
     String dateStart,
     String dateFinal,
@@ -188,7 +211,7 @@ public class Spider {
     final String VALUE_IS_ABSENT = "Information is Absent";
     summary = Optional.ofNullable(summary).orElse(VALUE_IS_ABSENT);
     objectives = Optional.ofNullable(objectives).orElse(VALUE_IS_ABSENT);
-    justification = Optional.ofNullable(justification).orElse(VALUE_IS_ABSENT);
+    defense = Optional.ofNullable(defense).orElse(VALUE_IS_ABSENT);
     results = Optional.ofNullable(results).orElse(VALUE_IS_ABSENT);
 
     return Project.builder()
@@ -199,7 +222,7 @@ public class Spider {
     .classification(classification) // TODOs: title
     .summary(null) // TODOs: summary 
     .objectives(null) // TODOs: objectives
-    .justification(null) // TODOs: justification 
+    .defense(null) // TODOs: justification 
     .results(null) // TODOs: results
     .dateStart(LocalDate.parse(dateStart, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
     .dateFinal(LocalDate.parse(dateFinal, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
@@ -231,5 +254,19 @@ public class Spider {
       e.printStackTrace();
       return null;
     }
+  }
+
+  private static String driver(String url) {
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--headless");
+
+    WebDriver driver = new ChromeDriver(options);
+    driver.get(url);    
+
+    String htmlDocument = driver.getPageSource(); 
+
+    driver.quit();
+
+    return htmlDocument;
   }
 }

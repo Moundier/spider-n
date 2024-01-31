@@ -31,7 +31,7 @@ public class Project {
     // private String description;
     private String summary; // old description (migh not exist)
     private String objectives; // old description (migh not exist)
-    private String justification; // old description (migh not exist) "Not informed"
+    private String defense; // old description (migh not exist) "Not informed"
     private String results; // old description (migh not exist)
 
     private LocalDate dateStart;
