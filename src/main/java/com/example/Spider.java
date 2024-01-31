@@ -1,21 +1,29 @@
 package com.example;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import org.checkerframework.checker.units.qual.h;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.example.models.Members;
 import com.example.models.Keyword;
@@ -34,7 +42,7 @@ public class Spider {
 
   static {
     Spider.onStart = TimeFormatted.now();
-    Todo.time("SOUP: Program started on " +  TimeFormatted.now());
+    Todo.time("SOUP: Program started on " + TimeFormatted.now());
   }
 
   private static void onClose(Runnable runnable) {
@@ -42,10 +50,10 @@ public class Spider {
   }
 
   public static void main(String... args) {
-    onClose(() ->  {
+    onClose(() -> {
       System.out.println("\n");
       Todo.look("Program finished... " + onStart);
-      System.out.println("\n"); 
+      System.out.println("\n");
     });
     Spider.crawl(74584); // 74584 100000
   }
@@ -91,7 +99,7 @@ public class Spider {
 
       // Set<Members> members = getMembers();
       // System.out.println(members.toString());
-      
+
       // TODOs: Options
       inspectClassification.add(doc.select("div.span6 > span").get(4).text());
       inspectStatus.add(doc.select("div.span6 > span").get(14).text());
@@ -99,26 +107,25 @@ public class Spider {
       System.out.println(inspectStatus);
 
       Project project = setProject(
-        doc.select("div.span12 > span").get(1).text(), 
-        doc.select("div.span6 > span").get(1).text(), 
-        getClassfication(doc.select("div.span6 > span").get(4).text()), 
-        doc.select("div.span12 > span").get(3).text(), 
-        doc.select("div.span12 > span").get(5).text(), 
-        doc.select("div.span12 > span").get(7).text(), 
-        doc.select("div.span12 > span").get(9).text(), 
-        doc.select("div.span3 > span").get(1).text(), // NOTE: dateStart
-        doc.select("div.span3 > span").get(3).text(), // NOTE: dateFinal
-        null,  // TODOs: publicationDate
-        null,
-        getStatus(doc.select("div.span6 > span").get(14).text()),  // TODOs: concluded
-        null   // TODOs: keywords
+          doc.select("div.span12 > span").get(1).text(),
+          doc.select("div.span6 > span").get(1).text(),
+          getClassfication(doc.select("div.span6 > span").get(4).text()),
+          doc.select("div.span12 > span").get(3).text(),
+          doc.select("div.span12 > span").get(5).text(),
+          doc.select("div.span12 > span").get(7).text(),
+          doc.select("div.span12 > span").get(9).text(),
+          doc.select("div.span3 > span").get(1).text(), // NOTE: dateStart
+          doc.select("div.span3 > span").get(3).text(), // NOTE: dateFinal
+          null, // TODOs: publicationDate
+          null,
+          getStatus(doc.select("div.span6 > span").get(14).text()), // TODOs: concluded
+          null // TODOs: keywords
       );
 
-      
       // NOTE: Be careful
       doc = Jsoup.parse(driver(url));
 
-      Set<Members> members = getMembers(doc.select("tr td"));
+      // Set<Members> members = getMembers(doc.select("tr td"));
 
       System.out.println(project);
 
@@ -133,14 +140,14 @@ public class Spider {
   }
 
   private static Status getStatus(String string) {
-    
+
     switch (string) {
       case "Suspenso":
         return Status.SUSPENSO;
       case "Concluído/Publicado":
         return Status.CONCLUIDO_PUBLICADO;
       case "Cancelado":
-        return Status.CANCELADO; 
+        return Status.CANCELADO;
       case "Em andamento":
         return Status.EM_ANDAMENTO;
       default:
@@ -169,7 +176,7 @@ public class Spider {
     Set<Members> associates = new HashSet<Members>();
 
     for (Element el : elements) {
-      
+
       // NOTE: PERSONAL
       // NOTE: vinculo
       // NOTE: vinculoStatus
@@ -193,20 +200,19 @@ public class Spider {
   // FAIL: Unknown 73138 (ERROR)
 
   private static Project setProject(
-    String title,
-    String numberUnique,
-    Classification classification,
-    String summary,
-    String objectives,
-    String defense,
-    String results,
-    String dateStart,
-    String dateFinal,
-    String publicationDate,
-    String completionDate,
-    Status status,
-    Set<Keyword> keywords
-  ) {
+      String title,
+      String numberUnique,
+      Classification classification,
+      String summary,
+      String objectives,
+      String defense,
+      String results,
+      String dateStart,
+      String dateFinal,
+      String publicationDate,
+      String completionDate,
+      Status status,
+      Set<Keyword> keywords) {
 
     final String VALUE_IS_ABSENT = "Information is Absent";
     summary = Optional.ofNullable(summary).orElse(VALUE_IS_ABSENT);
@@ -215,22 +221,22 @@ public class Spider {
     results = Optional.ofNullable(results).orElse(VALUE_IS_ABSENT);
 
     return Project.builder()
-    // .id(1L)
-    .logo("logo.png")
-    .title(null) // TODOs: title
-    .numberUnique(numberUnique)
-    .classification(classification) // TODOs: title
-    .summary(null) // TODOs: summary 
-    .objectives(null) // TODOs: objectives
-    .defense(null) // TODOs: justification 
-    .results(null) // TODOs: results
-    .dateStart(LocalDate.parse(dateStart, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-    .dateFinal(LocalDate.parse(dateFinal, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-    .publicationDate(null)
-    .completionDate(null)
-    .status(status)
-    .keywords(Set.of(/* set of Keyword objects */))
-    .build();
+        // .id(1L)
+        .logo("logo.png")
+        .title(null) // TODOs: title
+        .numberUnique(numberUnique)
+        .classification(classification) // TODOs: title
+        .summary(null) // TODOs: summary
+        .objectives(null) // TODOs: objectives
+        .defense(null) // TODOs: justification
+        .results(null) // TODOs: results
+        .dateStart(LocalDate.parse(dateStart, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+        .dateFinal(LocalDate.parse(dateFinal, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+        .publicationDate(null)
+        .completionDate(null)
+        .status(status)
+        .keywords(Set.of(/* set of Keyword objects */))
+        .build();
   }
 
   private static Document request(String url) {
@@ -239,18 +245,15 @@ public class Spider {
       Connection.Response response = connection.execute();
       Document document = response.parse();
       return document;
-    } 
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
       Todo.fail("Document is null");
       Todo.time(TimeFormatted.now());
       return null;
-    } 
-    catch (HttpStatusException e) {
+    } catch (HttpStatusException e) {
       Todo.fail("URL path is invalid: " + e.getUrl());
       Todo.time(TimeFormatted.now());
       return null;
-    } 
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       return null;
     }
@@ -261,12 +264,18 @@ public class Spider {
     options.addArguments("--headless");
 
     WebDriver driver = new ChromeDriver(options);
-    driver.get(url);    
 
-    String htmlDocument = driver.getPageSource(); 
-
-    driver.quit();
-
-    return htmlDocument;
+    try {
+      driver.get(url);
+      String htmlDocument = driver.getPageSource();
+      System.out.println(htmlDocument);
+      return htmlDocument;
+    } catch (Exception e) {
+      // Handle any exceptions that might occur during page load
+      e.printStackTrace();
+      return null;
+    } finally {
+      driver.quit();
+    }
   }
 }
