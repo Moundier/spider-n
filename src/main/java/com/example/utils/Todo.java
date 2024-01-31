@@ -6,12 +6,12 @@ public class Todo {
 
   // ANSI escape codes for colors
   public static final String ANSI_RESET = "\u001B[0m";
-  public static final String ANSI_BLUE = "\u001B[34m";
-  public static final String ANSI_RED = "\u001B[31m";
-  public static final String ANSI_YELLOW = "\u001B[33m";
+  public static final String ANSI_BLUEY = "\u001B[34m";
+  public static final String ANSI_REDDY = "\u001B[31m";
+  public static final String ANSI_YELLY = "\u001B[33m";
   public static final String ANSI_GREEN = "\u001B[32m";
-  public static final String ANSI_PURPLE = "\u001B[35m";
-  public static final String ANSI_CYAN = "\u001B[36m";
+  public static final String ANSI_PURPY = "\u001B[35m";
+  public static final String ANSI_CYANY = "\u001B[36m";
   public static final String ANSI_WHITE = "\u001B[37m";
   public static final String ANSI_BLACK = "\u001B[30m";
 
@@ -26,15 +26,15 @@ public class Todo {
   }
 
   public static void info(String message) {
-    io(ANSI_BLUE, "INFO", message);
+    io(ANSI_BLUEY, "INFO", message);
   }
 
   public static void fail(String message) {
-    io(ANSI_RED, "FAIL", message);
+    io(ANSI_REDDY, "FAIL", message);
   }
 
   public static void warn(String message) {
-    io(ANSI_YELLOW, "WARN", message);
+    io(ANSI_YELLY, "WARN", message);
   }
 
   public static void done(String message) {
@@ -42,23 +42,21 @@ public class Todo {
   }
 
   public static void look(String message) {
-    io(ANSI_PURPLE, "LOOK", message);
+    io(ANSI_PURPY, "LOOK", message);
   }
 
   public static void cyan(String message) {
-    io(ANSI_CYAN, "CYAN", message);
+    io(ANSI_CYANY, "CYAN", message);
   }
 
   public static void white(String message) {
     io(ANSI_WHITE, "WHITE", message);
   }
 
-  public static void dark(String message) {
-    io(ANSI_BLACK, "LOOK", message);
+  public static void time(String message) {
+    io(ANSI_BLACK, "TIME", message);
   }
 
-  public static void time(String message) {
-    io(ANSI_YELLOW, message);
-  }
+  // STOP, SKIP, SAVE, COPY
 
 }

@@ -2,7 +2,6 @@ package com.example.models;
 
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -27,26 +26,38 @@ public class Project {
     private Long id;
     private String logo; // additional
     private String title;
-    private Integer numberUnique; // TODOS: UniqueIdentifier
+    private String numberUnique; // TODOS: UniqueIdentifier
     private Classification classification;
     // private String description;
     private String summary; // old description (migh not exist)
     private String objectives; // old description (migh not exist)
     private String justification; // old description (migh not exist) "Not informed"
-    private Optional<String> results; // old description (migh not exist)
+    private String results; // old description (migh not exist)
 
     private LocalDate dateStart;
     private LocalDate dateFinal;
     private LocalDate publicationDate;
+    private LocalDate completionDate;
 
-    private Boolean concluded;
+    private Status status;
 
     @OneToMany
     private Set<Keyword> keywords;
 
     public enum Classification {
-        PESQUISA,
+        DEFAULT,
+        ENSINO,
         EXTENSAO,
+        PESQUISA,
+        DESENVOLVIMENTO_INSTITUCIONAL
+    }
+
+    public enum Status {
+        DEFAULT,
+        SUSPENSO,
+        CONCLUIDO_PUBLICADO,
+        CANCELADO,
+        EM_ANDAMENTO
     }
 
 }

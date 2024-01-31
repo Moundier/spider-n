@@ -16,14 +16,14 @@ import lombok.ToString;
 @Builder
 @ToString
 @Table(name = "associate")
-public class Associate {
+public class Members {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long associadoId;
   private String nome;
   private String matricula; // UniqueIdentifier
-  private AssociateRole associateRole;
+  private MemberRole memberRole;
   private String email;
 
   @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class Associate {
     ADMINISTRATIVO // Administrative staff
   }
 
-  public enum AssociateRole {
+  public enum MemberRole {
     AUTOR, // Author
     PARTICIPANTE, // Participant
     COAUTOR, // Co-author
