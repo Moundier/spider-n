@@ -5,11 +5,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
-import org.checkerframework.checker.units.qual.h;
+import javax.print.Doc;
+
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -17,11 +19,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -55,7 +57,14 @@ public class Spider {
       Todo.look("Program finished... " + onStart);
       System.out.println("\n");
     });
-    Spider.crawl(74584); // 74584 100000
+
+    Thread thread = new Thread(() -> Spider.crawl(74584));
+    try {
+      thread.start();
+      thread.join();
+    } catch (InterruptedException e) {
+      Todo.fail(e.getMessage());
+    }
   }
 
   private static boolean foundForbidden(Document doc, String url) {
@@ -80,6 +89,7 @@ public class Spider {
   private static void crawl(int startId) {
 
     for (int numb = startId; numb > 0; numb--) {
+
       System.out.println("-".repeat((10 * 10 * 10) / 5));
 
       String url = String.format(URL_TEMPLATE, numb);
@@ -122,21 +132,79 @@ public class Spider {
           null // TODOs: keywords
       );
 
-      // NOTE: Be careful
+      // Element element = doc.select("tbody").first();
       doc = Jsoup.parse(driver(url));
 
+      try {
+        Elements elements = doc.select("tbody > tr");
+
+        for (var el : elements) {
+          // String element = el.select("td").text();
+
+          String elA = el.select("td").get(1).text();
+          String elB = el.select("td").get(2).text();
+          String elC = el.select("td").get(3).text();
+          String elD = el.select("td").get(4).text();
+          String elE = el.select("td").get(5).text();
+          Todo.warn(elA);
+          Todo.warn(elB);
+          Todo.warn(elC);
+          Todo.warn(elD);
+          Todo.warn(elE);
+        }
+
+      } catch (Exception e) {
+        Todo.fail(e.getMessage());
+      }
       // Set<Members> members = getMembers(doc.select("tr td"));
 
       System.out.println(project);
-
-      // TODOs: Find Members
-      // TODOs: Find Projects
-      // TODOs: Link Members with Projects
 
       Todo.time(TimeFormatted.now());
     }
 
     System.out.println("Crawling completed.");
+  }
+
+  private static String driver(String url) {
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--headless");
+
+    WebDriver driver = new ChromeDriver(options);
+
+    try {
+
+      // TODOs: https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=74527
+      // page1_6
+      // page2_6
+      // page3_6
+      // page4_6
+      // page5_6
+      // page6_6
+      driver.get(url);
+        Thread.sleep(5000); // NOTE: Pause for interval
+
+      String htmlDocument = driver.getPageSource();
+      List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small"));
+      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1/2));
+      for (var el : elements) {
+        if (el != null) {
+          wait.until(ExpectedConditions.elementToBeClickable(el));
+          el.click();
+        }
+      }
+
+
+      // System.out.println(el);
+
+      return htmlDocument;
+    } catch (Exception e) {
+      System.out.println("INDEX OUT OF FUCKING BOUNDS");
+      e.printStackTrace();
+      return null;
+    } finally {
+      driver.quit();
+    }
   }
 
   private static Status getStatus(String string) {
@@ -259,23 +327,19 @@ public class Spider {
     }
   }
 
-  private static String driver(String url) {
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("--headless");
-
-    WebDriver driver = new ChromeDriver(options);
-
-    try {
-      driver.get(url);
-      String htmlDocument = driver.getPageSource();
-      System.out.println(htmlDocument);
-      return htmlDocument;
-    } catch (Exception e) {
-      // Handle any exceptions that might occur during page load
-      e.printStackTrace();
-      return null;
-    } finally {
-      driver.quit();
-    }
+  private static String validHTML(String content) {
+    // Wrap the content with a complete HTML document structure
+    return "<!DOCTYPE html>\n" +
+        "<html lang=\"en\">\n" +
+        "<head>\n" +
+        "    <meta charset=\"UTF-8\">\n" +
+        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+        "    <title>HTML Wrapper</title>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        content + "\n" +
+        "</body>\n" +
+        "</html>";
   }
+
 }
