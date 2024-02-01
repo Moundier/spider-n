@@ -184,7 +184,6 @@ public class Spider {
       // TODOs: https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=74527      // page1_6, page2_6, page3_6, page4_6,  page5_6, page6_6
       driver.get(url);
       final long time = 3000;
-      // 74.000 = 3 * 74.000 = 222.000
       Thread.sleep(time);
       String html = driver.getPageSource();
       List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small")); 
