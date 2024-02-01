@@ -93,6 +93,8 @@ public class Spider {
 
   private static void crawl(int startId) {
 
+    WebDriver driver = new ChromeDriver();
+
     for (int numb = startId; numb > 0; numb--) {
 
       System.out.println("-".repeat((10 * 10 * 10) / 5));
@@ -138,7 +140,9 @@ public class Spider {
       );
 
       // Element element = doc.select("tbody").first();
-      doc = Jsoup.parse(driver(url));
+
+      // TODOs: update html document, driver.get, pass tabs, collect all, next 
+      doc = Jsoup.parse(driver(url, driver)); 
 
       try {
         Elements elements = doc.select("tbody > tr");
@@ -168,20 +172,19 @@ public class Spider {
       Todo.time(TimeFormatted.now());
     }
 
+    driver.quit();
+
     System.out.println("Crawling completed.");
   }
 
-  private static String driver(String url) {
+  private static String driver(String url, WebDriver driver) {
     // ChromeOptions options = new ChromeOptions();
     // options.addArguments("--headless");
-
-    WebDriver driver = new ChromeDriver();
-
     try {
       // TODOs: https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=74527      // page1_6, page2_6, page3_6, page4_6,  page5_6, page6_6
       driver.get(url);
       final long time = 3000;
-
+      // 74.000 = 3 * 74.000 = 222.000
       Thread.sleep(time);
       String html = driver.getPageSource();
       List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small")); 
@@ -214,13 +217,9 @@ public class Spider {
     } 
     catch (Exception e) {
       System.out.println("Error: print stack trace");
-      // e.printStackTrace();
       Todo.fail(e.getMessage());
       return null;
     } 
-    finally {
-      driver.quit();
-    }
   }
 
   private static Status getStatus(String string) {
