@@ -86,6 +86,11 @@ public class Spider {
   static Set<String> inspectClassification = new HashSet<>();
   static Set<String> inspectMemeberRole = new HashSet<>();
 
+  // Add type of vinculo
+  // Add Status of Vinculo
+  // Add Curso
+  // Add Funcao no projeto
+
   private static void crawl(int startId) {
 
     for (int numb = startId; numb > 0; numb--) {
@@ -167,42 +172,53 @@ public class Spider {
   }
 
   private static String driver(String url) {
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("--headless");
+    // ChromeOptions options = new ChromeOptions();
+    // options.addArguments("--headless");
 
-    WebDriver driver = new ChromeDriver(options);
+    WebDriver driver = new ChromeDriver();
 
     try {
-
-      // TODOs: https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=74527
-      // page1_6
-      // page2_6
-      // page3_6
-      // page4_6
-      // page5_6
-      // page6_6
+      // TODOs: https://portal.ufsm.br/projetos/publico/projetos/view.html?idProjeto=74527      // page1_6, page2_6, page3_6, page4_6,  page5_6, page6_6
       driver.get(url);
-        Thread.sleep(5000); // NOTE: Pause for interval
+      final long time = 3000;
 
-      String htmlDocument = driver.getPageSource();
-      List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small"));
-      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1/2));
-      for (var el : elements) {
-        if (el != null) {
-          wait.until(ExpectedConditions.elementToBeClickable(el));
-          el.click();
+      Thread.sleep(time);
+      String html = driver.getPageSource();
+      List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small")); 
+
+      for (int i = 0; i < elements.size(); ++i) {
+
+        WebElement openButton = elements.get(i);
+        System.out.println("[Button]: " + i);
+
+        if (openButton != null) {
+          Thread.sleep(time); 
+          openButton.click(); // NOTE: Open Pop Up
+          Thread.sleep(time); 
+          List<WebElement> closeButtons = driver.findElements(By.cssSelector(".modaljs-scroll-overlay .close"));
+          Thread.sleep(time);
+
+          try {
+            WebElement closeOrder = closeButtons.get(i);
+            System.out.println("[Button] Clicked ");
+            closeOrder.click();
+            Thread.sleep(time); // NOTE: Close Pop Up
+            System.out.println("[Button] Closed ");
+          } catch (Exception e) {
+            System.out.println("BEFORE EXCEPTION");
+          }
         }
       }
 
-
-      // System.out.println(el);
-
-      return htmlDocument;
-    } catch (Exception e) {
-      System.out.println("INDEX OUT OF FUCKING BOUNDS");
-      e.printStackTrace();
+      return html;
+    } 
+    catch (Exception e) {
+      System.out.println("Error: print stack trace");
+      // e.printStackTrace();
+      Todo.fail(e.getMessage());
       return null;
-    } finally {
+    } 
+    finally {
       driver.quit();
     }
   }
