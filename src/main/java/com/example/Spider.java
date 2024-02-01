@@ -187,31 +187,31 @@ public class Spider {
       // 74.000 = 3 * 74.000 = 222.000
       Thread.sleep(time);
       String html = driver.getPageSource();
-      List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small")); 
+      // List<WebElement> elements = driver.findElements(By.cssSelector(".btn-group.small")); 
 
-      for (int i = 0; i < elements.size(); ++i) {
+      // for (int i = 0; i < elements.size(); ++i) {
 
-        WebElement openButton = elements.get(i);
-        System.out.println("[Button]: " + i);
+      //   WebElement openButton = elements.get(i);
+      //   System.out.println("[Button]: " + i);
 
-        if (openButton != null) {
-          Thread.sleep(time); 
-          openButton.click(); // NOTE: Open Pop Up
-          Thread.sleep(time); 
-          List<WebElement> closeButtons = driver.findElements(By.cssSelector(".modaljs-scroll-overlay .close"));
-          Thread.sleep(time);
+      //   if (openButton != null) {
+      //     Thread.sleep(time); 
+      //     openButton.click(); // NOTE: Open Pop Up
+      //     Thread.sleep(time); 
+      //     List<WebElement> closeButtons = driver.findElements(By.cssSelector(".modaljs-scroll-overlay .close"));
+      //     Thread.sleep(time);
 
-          try {
-            WebElement closeOrder = closeButtons.get(i);
-            System.out.println("[Button] Clicked ");
-            closeOrder.click();
-            Thread.sleep(time); // NOTE: Close Pop Up
-            System.out.println("[Button] Closed ");
-          } catch (Exception e) {
-            System.out.println("BEFORE EXCEPTION");
-          }
-        }
-      }
+      //     try {
+      //       WebElement closeOrder = closeButtons.get(i);
+      //       System.out.println("[Button] Clicked ");
+      //       closeOrder.click();
+      //       Thread.sleep(time); // NOTE: Close Pop Up
+      //       System.out.println("[Button] Closed ");
+      //     } catch (Exception e) {
+      //       System.out.println("BEFORE EXCEPTION");
+      //     }
+      //   }
+      // }
 
       return html;
     } 
